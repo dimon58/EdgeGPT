@@ -165,6 +165,11 @@ class ChatHub:
                                     ]
                                     != "Apology"
                                 )
+                            and
+                            (
+                                response["arguments"][0]["messages"][0].get("messageType")
+                                != "AdsQuery"
+                            )
                                 and not draw
                                 and not raw
                             ):
