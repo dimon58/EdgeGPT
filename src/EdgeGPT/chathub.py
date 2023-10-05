@@ -10,6 +10,7 @@ import aiohttp
 import certifi
 import httpx
 from BingImageCreator import ImageGenAsync
+import urllib.parse
 
 from .constants import DELIMITER, HEADERS, HEADERS_INIT_CONVER
 from .conversation import Conversation
@@ -54,6 +55,10 @@ class ChatHub:
             timeout=900,
             headers=HEADERS_INIT_CONVER,
         )
+        if conversation.struct.get("encryptedConversationSignature"):
+            self.encrypted_conversation_signature = conversation.struct["encryptedConversationSignature"]
+        else:
+            self.encrypted_conversation_signature = None
 
     async def get_activity(self) -> dict:
         url = "https://www.bing.com/turing/conversation/chats"
@@ -76,6 +81,9 @@ class ChatHub:
         locale: str = guess_locale(),
     ) -> Generator[bool, Union[dict, str], None]:
         """ """
+        if self.encrypted_conversation_signature is not None:
+            wss_link = wss_link or "wss://sydney.bing.com/sydney/ChatHub"
+            wss_link += f"?sec_access_token={urllib.parse.quote(self.encrypted_conversation_signature)}"
         cookies = {}
         if self.cookies is not None:
             for cookie in self.cookies:
