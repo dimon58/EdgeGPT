@@ -13,6 +13,7 @@ class ChatHubRequest:
     def __init__(
         self,
         conversation_signature: str,
+        encrypted_conversation_signature: str,
         client_id: str,
         conversation_id: str,
         invocation_id: int = 3,
@@ -22,6 +23,7 @@ class ChatHubRequest:
         self.client_id: str = client_id
         self.conversation_id: str = conversation_id
         self.conversation_signature: str = conversation_signature
+        self.encrypted_conversation_signature: str = encrypted_conversation_signature
         self.invocation_id: int = invocation_id
 
     def update(
@@ -123,6 +125,7 @@ class ChatHubRequest:
                     "tone": conversation_style.name.capitalize(),  # Make first letter uppercase
                     "requestId": message_id,
                     "conversationSignature": self.conversation_signature,
+                    "encryptedConversationSignature": self.encrypted_conversation_signature,
                     "participant": {
                         "id": self.client_id,
                     },
